@@ -1,0 +1,31 @@
+# Internal working docs (not for submission)
+SANITY.md
+ARCHITECTURE.md
+NOTES.md
+*_OLD*
+*.pdf
+
+# SQLite Local Databases
+*.db
+*.db-shm
+*.db-wal
+
+# .NET Build artifacts & cache
+server/**/bin/
+server/**/obj/
+server/.vs/
+*.user
+
+# Node & Angular (Root & Client)
+node_modules/
+client/node_modules/
+dist/
+client/dist/
+.angular/
+client/.angular/
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
