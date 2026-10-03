@@ -1,0 +1,41 @@
+{
+  "Suppliers": [
+    {
+      "Name": "Supplier A",
+      "MinDelayMs": 200,
+      "MaxDelayMs": 800
+    },
+    {
+      "Name": "Supplier B",
+      "MinDelayMs": 500,
+      "MaxDelayMs": 1500
+    },
+    {
+      "Name": "Supplier C",
+      "MinDelayMs": 1000,
+      "MaxDelayMs": 2500
+    },
+    {
+      "Name": "Supplier D",
+      "MinDelayMs": 1500,
+      "MaxDelayMs": 3500
+    },
+    {
+      "Name": "Supplier E",
+      "MinDelayMs": 3000,
+      "MaxDelayMs": 5000
+    },
+    {
+      "Name": "Supplier F",
+      "MinDelayMs": 500,
+      "MaxDelayMs": 2000,
+      "FailureProbability": 0.3
+    },
+    {
+      "Name": "Supplier G",
+      "MinDelayMs": 0,
+      "MaxDelayMs": 0,
+      "NeverResponds": true
+    }
+  ]
+}

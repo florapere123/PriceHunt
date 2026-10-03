@@ -1,0 +1,20 @@
+{
+  "valid": {
+    "fromLocation": "London",
+    "toLocation": "Paris",
+    "fromDate": "2026-11-01",
+    "toDate": "2026-11-08",
+    "selectedSuppliers": ["Fast", "Slow", "Bad"]
+  },
+  "invalid": [
+    {
+      "fromLocation": "",
+      "toLocation": "   ",
+      "fromDate": "2026-12-10",
+      "toDate": "2026-12-01",
+      "selectedSuppliers": null,
+      "expectedErrorKeys": ["FromLocation", "ToLocation", "ToDate"],
+      "expectedErrorCount": 3
+    }
+  ]
+}

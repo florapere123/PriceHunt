@@ -1,0 +1,31 @@
+@PriceHunt.Api_HostAddress = http://localhost:5119
+
+### Search all suppliers (Supplier G never responds, so this ends as TimedOut after 6s)
+POST {{PriceHunt.Api_HostAddress}}/api/search
+Content-Type: application/json
+
+{
+  "fromLocation": "Tel Aviv",
+  "toLocation": "London",
+  "fromDate": "2026-11-01",
+  "toDate": "2026-11-08",
+  "selectedSuppliers": []
+}
+
+### Search a subset of suppliers (should end as Completed)
+POST {{PriceHunt.Api_HostAddress}}/api/search
+Content-Type: application/json
+
+{
+  "fromLocation": "Tel Aviv",
+  "toLocation": "Paris",
+  "fromDate": "2026-12-01",
+  "toDate": "2026-12-05",
+  "selectedSuppliers": ["Supplier A", "Supplier B", "Supplier F"]
+}
+
+### History
+GET {{PriceHunt.Api_HostAddress}}/api/history?page=1&pageSize=10
+
+### History filtered
+GET {{PriceHunt.Api_HostAddress}}/api/history?status=TimedOut&supplier=Supplier%20G
