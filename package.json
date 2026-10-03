@@ -1,14 +1,15 @@
 {
   "name": "price-hunt",
   "version": "1.0.0",
-  "description": "PriceHunt — Full-Stack Flight & Shipping Price Aggregator (.NET + Angular)",
+  "description": "PriceHunt   Full-Stack Flight & Shipping Price Aggregator (.NET + Angular)",
   "scripts": {
     "install:all": "npm install && npm install --prefix client",
     "start": "concurrently -n \"SERVER,CLIENT\" -c \"cyan,magenta\" \"dotnet run --project server/src/PriceHunt.Api\" \"npm start --prefix client\"",
     "start:server": "dotnet run --project server/src/PriceHunt.Api",
     "start:client": "npm start --prefix client",
     "test": "dotnet test server/ && npm test --prefix client -- --watch=false --browsers=ChromeHeadless",
-    "build": "dotnet build server/ && npm run build --prefix client"
+    "build": "dotnet build server/ && npm run build --prefix client",
+    "postinstall": "npm install --prefix client"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

@@ -25,9 +25,25 @@ npm start
 
 Run from the repository root. This:
 
-1. Installs dependencies for both projects (if not already installed).
-2. Launches the .NET 10 API and the Angular 22.2 client together, in one terminal.
-3. Creates and initializes the SQLite schema (`pricehunt.db`) automatically on
+1.  Install Dependencies
+Run from the repository root. 
+This will automatically install dependencies for **both** the root workspace
+ and the Angular client (populating the required `node_modules` in both locations):
+ `npm install`
+ 2. Run the Application
+Once dependencies are installed, start both the .NET 10 backend server and the Angular 22.2 client concurrently with a single command from the root:
+
+Bash
+npm start
+Client UI: http://localhost:4200
+
+API / Swagger: http://localhost:5119/swagger
+
+Automatic Database: The SQLite database (pricehunt.db) and its schema are provisioned automatically on the first run.
+
+Tests: dotnet test (from the server/ directory) runs the full Application, Infrastructure, and API integration test suite.
+3. Launches the .NET 10 API and the Angular 22.2 client together, in one terminal.
+4. Creates and initializes the SQLite schema (`pricehunt.db`) automatically on
    first run — no manual migration step required.
 
 - Client: `http://localhost:4200`
