@@ -1,0 +1,197 @@
+<section class="flex flex-col gap-4 rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+  <div class="flex flex-wrap items-center justify-between gap-2">
+    <div class="flex flex-wrap items-center gap-3" role="status" aria-live="polite" aria-atomic="true">
+      <span
+        class="inline-block rounded-md px-2.5 py-0.5 text-xs font-bold uppercase tracking-wide"
+        [ngClass]="vm().statusBadgeClass"
+      >
+        {{ vm().statusLabel }}
+      </span>
+      <strong class="text-sm">{{ vm().respondedCount }}/{{ vm().totalCount }} responded</strong>
+      @if (vm().elapsedMs !== null) {
+        <span class="text-sm text-slate-500">in {{ vm().elapsedMs! / 1000 | number: '1.1-1' }}s</span>
+      }
+    </div>
+  </div>
+
+  @if (vm().lastRequest; as req) {
+    <div
+      class="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3"
+      role="region"
+      aria-label="Active search route"
+    >
+      <p class="m-0 text-xs font-semibold uppercase tracking-wide text-slate-500">Active search</p>
+      <p class="m-0 mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-slate-600">
+        <span class="font-semibold text-slate-900">{{ req.fromLocation }}</span>
+        <svg
+          class="h-4 w-4 shrink-0 text-slate-400"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          aria-hidden="true"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+        </svg>
+        <span class="font-semibold text-slate-900">{{ req.toLocation }}</span>
+        <span class="text-slate-400" aria-hidden="true">&middot;</span>
+        <span>
+          <span class="text-slate-500">Departure</span>
+          <span class="ml-1 font-medium text-slate-800">{{ req.fromDate }}</span>
+        </span>
+        <span class="text-slate-400" aria-hidden="true">&ndash;</span>
+        <span>
+          <span class="text-slate-500">Return</span>
+          <span class="ml-1 font-medium text-slate-800">{{ req.toDate }}</span>
+        </span>
+      </p>
+    </div>
+  }
+
+  @if (vm().isRunning) {
+    <div class="h-1.5 overflow-hidden rounded-full bg-slate-200" role="progressbar" aria-busy="true">
+      <div
+        class="h-full w-full animate-shimmer bg-gradient-to-r from-blue-600 via-blue-400 to-blue-600 bg-[length:200%_100%]"
+      ></div>
+    </div>
+  }
+
+  <div class="flex flex-wrap gap-2">
+    @for (chip of vm().supplierChips; track chip.supplierName) {
+      <span
+        class="inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-sm font-medium"
+        [ngClass]="outcomeChipClass(chip.outcome)"
+      >
+        <span
+          class="h-2 w-2 rounded-full bg-current"
+          [class.animate-pulse-dot]="chip.outcome === SupplierOutcome.Pending"
+        ></span>
+        {{ chip.supplierName }}
+        <span class="ml-0.5 text-xs opacity-80">{{ outcomeChipLabel(chip.outcome) }}</span>
+      </span>
+    }
+  </div>
+
+  @if (!vm().isRunning && vm().status !== SearchStatus.Error) {
+    <div class="flex flex-wrap gap-5 text-sm font-medium" role="status" aria-live="polite" aria-atomic="true">
+      <span class="text-green-600">{{ vm().successCount }} success</span>
+      <span class="text-red-600">{{ vm().failedCount }} failed</span>
+      <span class="text-amber-600">{{ vm().timeoutCount }} timed out</span>
+      @if (vm().cancelledCount > 0) {
+        <span class="text-slate-500">{{ vm().cancelledCount }} cancelled</span>
+      }
+    </div>
+  }
+
+  @if (vm().error; as errorMessage) {
+    <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">
+      {{ errorMessage }}
+    </div>
+  }
+
+  <div class="overflow-x-auto">
+    <table class="w-full border-collapse text-sm">
+      <thead>
+        <tr>
+          <th
+            scope="col"
+            class="w-10 border-b border-slate-200 px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-slate-500"
+          >
+            #
+          </th>
+          <th
+            scope="col"
+            class="border-b border-slate-200 px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-slate-500"
+          >
+            Date
+          </th>
+          <th
+            scope="col"
+            class="border-b border-slate-200 px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-slate-500"
+          >
+            Supplier
+          </th>
+          <th
+            scope="col"
+            class="border-b border-slate-200 px-3 py-2.5 text-right text-xs font-semibold uppercase tracking-wide text-slate-500"
+          >
+            Price
+          </th>
+          <th
+            scope="col"
+            class="border-b border-slate-200 px-3 py-2.5 text-right text-xs font-semibold uppercase tracking-wide text-slate-500"
+          >
+            Response time
+          </th>
+          <th
+            scope="col"
+            class="border-b border-slate-200 px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-slate-500"
+          >
+            Supplier outcome
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (vm().resultRows.length > 0) {
+          @for (row of vm().resultRows; track row.supplierName; let i = $index) {
+            <tr
+              [class.bg-green-50]="vm().bestPriceSupplierName === row.supplierName"
+              [class.text-slate-500]="row.outcome !== SupplierOutcome.Success"
+            >
+              <td class="border-t border-slate-200 px-3 py-2.5 text-slate-500">{{ i + 1 }}</td>
+              <td class="border-t border-slate-200 px-3 py-2.5 align-middle">
+                @if (row.timestamp !== null) {
+                  <div>{{ row.timestamp | date: 'MMM d, y' }}</div>
+                  <div class="text-xs text-slate-500">{{ row.timestamp | date: 'HH:mm:ss' }}</div>
+                } @else {
+                  <span class="text-slate-500">&mdash;</span>
+                }
+              </td>
+              <td class="border-t border-slate-200 px-3 py-2.5">
+                {{ row.supplierName }}
+                @if (vm().bestPriceSupplierName === row.supplierName) {
+                  <span
+                    class="ml-2 rounded border border-green-600 px-1.5 py-0.5 text-[0.7rem] font-semibold uppercase tracking-wide text-green-700"
+                  >
+                    Best price
+                  </span>
+                }
+              </td>
+              <td class="border-t border-slate-200 px-3 py-2.5 text-right font-semibold tabular-nums">
+                @if (row.outcome === SupplierOutcome.Success && row.price !== null) {
+                  {{ row.price | currency: 'USD' }}
+                } @else {
+                  <span class="text-slate-500">&mdash;</span>
+                }
+              </td>
+              <td class="border-t border-slate-200 px-3 py-2.5 text-right tabular-nums">
+                @if (row.responseTimeMs !== null) {
+                  {{ row.responseTimeMs | number }} ms
+                } @else {
+                  <span class="text-slate-500">&mdash;</span>
+                }
+              </td>
+              <td class="border-t border-slate-200 px-3 py-2.5">
+                <span [ngClass]="outcomePillClass(row.outcome)">
+                  {{ outcomePillLabel(row.outcome) }}
+                </span>
+              </td>
+            </tr>
+          }
+        } @else if (vm().isRunning) {
+          <tr>
+            <td colspan="6" class="border-t border-slate-200 py-8 text-center text-slate-500">
+              Waiting for the first supplier to respond&hellip;
+            </td>
+          </tr>
+        } @else if (vm().status !== SearchStatus.Error) {
+          <tr>
+            <td colspan="6" class="border-t border-slate-200 py-8 text-center text-slate-500">
+              No supplier returned a quote.
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

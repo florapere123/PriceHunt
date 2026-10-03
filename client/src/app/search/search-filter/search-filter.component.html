@@ -1,0 +1,180 @@
+<form
+  class="flex flex-col gap-4 rounded-lg border border-slate-200 bg-white p-6 shadow-sm"
+  (ngSubmit)="action.emit({ type: 'submit' })"
+>
+  <div
+    class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_10rem_10rem] lg:items-end"
+  >
+    <label class="flex w-full flex-col" for="fromLocation">
+      <span class="text-xs font-semibold uppercase tracking-wide text-slate-500">From</span>
+      <input
+        id="fromLocation"
+        type="text"
+        class="mt-1 block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+        [class.border-red-500]="showFieldError('fromLocation')"
+        [class.focus:border-red-500]="showFieldError('fromLocation')"
+        [class.focus:ring-red-500/20]="showFieldError('fromLocation')"
+        [value]="vm().formModel.fromLocation"
+        (input)="action.emit({ type: 'fieldChange', field: 'fromLocation', value: $any($event.target).value })"
+        placeholder="e.g. London"
+        autocomplete="off"
+        [attr.aria-invalid]="showFieldError('fromLocation')"
+        [attr.aria-describedby]="showFieldError('fromLocation') ? 'fromLocation-error' : null"
+      />
+      @if (showFieldError('fromLocation')) {
+        <small id="fromLocation-error" class="mt-1 text-sm text-red-600" role="alert">Origin is required.</small>
+      }
+    </label>
+
+    <button
+      type="button"
+      class="inline-flex h-[38px] w-[38px] shrink-0 items-center justify-center self-end rounded-md border border-slate-300 bg-white shadow-sm transition-colors hover:border-slate-400 hover:bg-slate-50 sm:col-span-2 lg:col-span-1 lg:justify-self-center"
+      aria-label="Swap origin and destination locations"
+      (click)="action.emit({ type: 'swapLocations' })"
+    >
+      <svg
+        class="h-5 w-5 text-slate-600"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        aria-hidden="true"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4M16 17H4m0 0l4 4m-4-4l4-4" />
+      </svg>
+    </button>
+
+    <label class="flex w-full flex-col" for="toLocation">
+      <span class="text-xs font-semibold uppercase tracking-wide text-slate-500">To</span>
+      <input
+        id="toLocation"
+        type="text"
+        class="mt-1 block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+        [class.border-red-500]="showFieldError('toLocation')"
+        [value]="vm().formModel.toLocation"
+        (input)="action.emit({ type: 'fieldChange', field: 'toLocation', value: $any($event.target).value })"
+        placeholder="e.g. Paris"
+        autocomplete="off"
+        [attr.aria-invalid]="showFieldError('toLocation')"
+        [attr.aria-describedby]="showFieldError('toLocation') ? 'toLocation-error' : null"
+      />
+      @if (showFieldError('toLocation')) {
+        <small id="toLocation-error" class="mt-1 text-sm text-red-600" role="alert">Destination is required.</small>
+      }
+    </label>
+
+    <label class="flex w-full flex-col" for="fromDate">
+      <span class="text-xs font-semibold uppercase tracking-wide text-slate-500">Departure</span>
+      <input
+        id="fromDate"
+        type="date"
+        class="mt-1 block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+        [value]="vm().formModel.fromDate"
+        (input)="action.emit({ type: 'fieldChange', field: 'fromDate', value: $any($event.target).value })"
+      />
+    </label>
+
+    <label class="flex w-full flex-col" for="toDate">
+      <span class="text-xs font-semibold uppercase tracking-wide text-slate-500">Return</span>
+      <input
+        id="toDate"
+        type="date"
+        class="mt-1 block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+        [value]="vm().formModel.toDate"
+        (input)="action.emit({ type: 'fieldChange', field: 'toDate', value: $any($event.target).value })"
+        [min]="vm().formModel.fromDate"
+        [attr.aria-describedby]="showFieldError('toDate') || showFieldError('dateRange') ? 'dateRange-error' : null"
+      />
+    </label>
+  </div>
+
+  @if (showFieldError('toDate') || showFieldError('dateRange')) {
+    <small id="dateRange-error" class="text-sm text-red-600" role="alert">
+      Return date must be on or after the departure date.
+    </small>
+  }
+
+  <fieldset class="m-0 w-full rounded-lg border border-slate-200 bg-slate-50/50 p-4" aria-label="Suppliers to query">
+    <legend class="flex flex-wrap items-center gap-2 px-1 text-sm font-semibold text-slate-700">
+      Suppliers
+      @if (!vm().suppliersLoading) {
+        <span class="font-normal text-slate-500">
+          ({{ vm().selectedCount }}/{{ vm().suppliers.length }} selected)
+        </span>
+        <button
+          type="button"
+          class="cursor-pointer border-0 bg-transparent p-0 text-sm font-medium text-blue-600 hover:underline disabled:cursor-not-allowed disabled:opacity-50"
+          (click)="action.emit({ type: 'toggleAll', checked: true })"
+          [disabled]="vm().suppliers.length === 0"
+        >
+          All
+        </button>
+        <button
+          type="button"
+          class="cursor-pointer border-0 bg-transparent p-0 text-sm font-medium text-blue-600 hover:underline disabled:cursor-not-allowed disabled:opacity-50"
+          (click)="action.emit({ type: 'toggleAll', checked: false })"
+          [disabled]="vm().suppliers.length === 0"
+        >
+          None
+        </button>
+      }
+    </legend>
+    @if (vm().suppliersLoading) {
+      <div class="mt-2 flex flex-wrap gap-2" aria-busy="true" aria-label="Loading suppliers">
+        @for (index of skeletonPlaceholders(); track $index) {
+          <span
+            class="inline-block h-9 w-28 animate-skeleton-shimmer rounded-full bg-gradient-to-r from-slate-100 via-slate-200 to-slate-100 bg-[length:200%_100%]"
+          ></span>
+        }
+      </div>
+    } @else if (vm().suppliersError; as message) {
+      <small class="mt-2 block text-sm text-red-600" role="alert">{{ message }}</small>
+    } @else {
+      <div class="mt-2 flex flex-wrap gap-2">
+        @for (name of vm().suppliers; track name) {
+          <label
+            class="inline-flex cursor-pointer select-none items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-colors"
+            [ngClass]="
+              isSupplierSelected(name)
+                ? 'border-blue-600 bg-blue-50 text-blue-800'
+                : 'border-slate-200 bg-slate-50 hover:bg-slate-100'
+            "
+          >
+            <input
+              type="checkbox"
+              class="sr-only"
+              [checked]="isSupplierSelected(name)"
+              (change)="action.emit({ type: 'toggleSupplier', name, checked: $any($event.target).checked })"
+            />
+            {{ name }}
+          </label>
+        }
+      </div>
+    }
+    @if (showFieldError('selectedSuppliers') || showFieldError('noSupplier')) {
+      <small id="selectedSuppliers-error" class="mt-2 block text-sm text-red-600" role="alert">
+        Select at least one supplier.
+      </small>
+    }
+  </fieldset>
+
+  <div class="flex justify-end pt-1">
+    @if (vm().isRunning) {
+      <button
+        type="button"
+        class="inline-flex items-center justify-center gap-1.5 rounded-md border border-red-600 bg-red-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:border-red-700 hover:bg-red-700"
+        (click)="action.emit({ type: 'cancel' })"
+      >
+        Cancel search
+      </button>
+    } @else {
+      <button
+        type="submit"
+        class="inline-flex items-center justify-center gap-1.5 rounded-md border border-blue-600 bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:border-blue-700 hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+        [disabled]="!vm().validationSuccess || vm().suppliersLoading || vm().suppliers.length === 0"
+      >
+        Search prices
+      </button>
+    }
+  </div>
+</form>

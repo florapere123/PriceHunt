@@ -1,0 +1,252 @@
+<section class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+  @if (vm().error; as message) {
+    <div class="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">
+      {{ message }}
+    </div>
+  }
+
+  @if (vm().loading) {
+    <div
+      class="mb-4 h-1.5 overflow-hidden rounded-full bg-slate-200"
+      role="progressbar"
+      aria-label="Loading search history"
+      aria-busy="true"
+    >
+      <div
+        class="h-full w-full animate-shimmer bg-gradient-to-r from-blue-600 via-blue-400 to-blue-600 bg-[length:200%_100%]"
+      ></div>
+    </div>
+  }
+
+  <div class="overflow-x-auto">
+    <table class="w-full border-collapse text-sm" [attr.aria-busy]="vm().loading">
+      <thead>
+        <tr>
+          <th
+            scope="col"
+            class="cursor-pointer select-none whitespace-nowrap border-b border-slate-200 px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-slate-500 transition-colors hover:text-blue-600"
+            [class.text-blue-600]="vm().sortBy === HistorySortBy.Date"
+            (click)="action.emit({ type: 'sort', column: HistorySortBy.Date })"
+          >
+            Date
+            <span class="inline-block w-4 text-[0.7rem]">{{ vm().sortIndicators[HistorySortBy.Date] }}</span>
+          </th>
+          <th
+            scope="col"
+            class="cursor-pointer select-none whitespace-nowrap border-b border-slate-200 px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-slate-500 transition-colors hover:text-blue-600"
+            [class.text-blue-600]="vm().sortBy === HistorySortBy.Route"
+            (click)="action.emit({ type: 'sort', column: HistorySortBy.Route })"
+          >
+            Route
+            <span class="inline-block w-4 text-[0.7rem]">{{ vm().sortIndicators[HistorySortBy.Route] }}</span>
+          </th>
+          <th
+            scope="col"
+            class="cursor-pointer select-none whitespace-nowrap border-b border-slate-200 px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-slate-500 transition-colors hover:text-blue-600"
+            [class.text-blue-600]="vm().sortBy === HistorySortBy.Supplier"
+            (click)="action.emit({ type: 'sort', column: HistorySortBy.Supplier })"
+          >
+            Supplier
+            <span class="inline-block w-4 text-[0.7rem]">{{ vm().sortIndicators[HistorySortBy.Supplier] }}</span>
+          </th>
+          <th
+            scope="col"
+            class="cursor-pointer select-none whitespace-nowrap border-b border-slate-200 px-3 py-2.5 text-right text-xs font-semibold uppercase tracking-wide text-slate-500 transition-colors hover:text-blue-600"
+            [class.text-blue-600]="vm().sortBy === HistorySortBy.Price"
+            (click)="action.emit({ type: 'sort', column: HistorySortBy.Price })"
+          >
+            Price
+            <span class="inline-block w-4 text-[0.7rem]">{{ vm().sortIndicators[HistorySortBy.Price] }}</span>
+          </th>
+          <th
+            scope="col"
+            class="cursor-pointer select-none whitespace-nowrap border-b border-slate-200 px-3 py-2.5 text-right text-xs font-semibold uppercase tracking-wide text-slate-500 transition-colors hover:text-blue-600"
+            [class.text-blue-600]="vm().sortBy === HistorySortBy.ResponseTime"
+            (click)="action.emit({ type: 'sort', column: HistorySortBy.ResponseTime })"
+          >
+            Response time
+            <span class="inline-block w-4 text-[0.7rem]">{{ vm().sortIndicators[HistorySortBy.ResponseTime] }}</span>
+          </th>
+          <th
+            scope="col"
+            class="border-b border-slate-200 px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-slate-500"
+          >
+            Supplier outcome
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (vm().loading) {
+          @for (index of skeletonRows(); track $index) {
+            <tr aria-hidden="true">
+              <td class="border-t border-slate-200 px-3 py-3.5 align-middle">
+                <span
+                  class="mb-1.5 block h-3.5 w-[65%] animate-skeleton-shimmer rounded bg-gradient-to-r from-slate-100 via-slate-200 to-slate-100 bg-[length:200%_100%]"
+                ></span>
+                <span
+                  class="block h-2.5 w-[40%] animate-skeleton-shimmer rounded bg-gradient-to-r from-slate-100 via-slate-200 to-slate-100 bg-[length:200%_100%]"
+                ></span>
+              </td>
+              <td class="border-t border-slate-200 px-3 py-3.5 align-middle">
+                <span
+                  class="mb-1.5 block h-3.5 w-[85%] animate-skeleton-shimmer rounded bg-gradient-to-r from-slate-100 via-slate-200 to-slate-100 bg-[length:200%_100%]"
+                ></span>
+                <span
+                  class="block h-3.5 w-[65%] animate-skeleton-shimmer rounded bg-gradient-to-r from-slate-100 via-slate-200 to-slate-100 bg-[length:200%_100%]"
+                ></span>
+              </td>
+              <td class="border-t border-slate-200 px-3 py-3.5 align-middle">
+                <span
+                  class="block h-3.5 w-[65%] animate-skeleton-shimmer rounded bg-gradient-to-r from-slate-100 via-slate-200 to-slate-100 bg-[length:200%_100%]"
+                ></span>
+              </td>
+              <td class="border-t border-slate-200 px-3 py-3.5 text-right align-middle">
+                <span
+                  class="ml-auto block h-2.5 w-[40%] animate-skeleton-shimmer rounded bg-gradient-to-r from-slate-100 via-slate-200 to-slate-100 bg-[length:200%_100%]"
+                ></span>
+              </td>
+              <td class="border-t border-slate-200 px-3 py-3.5 text-right align-middle">
+                <span
+                  class="ml-auto block h-2.5 w-[40%] animate-skeleton-shimmer rounded bg-gradient-to-r from-slate-100 via-slate-200 to-slate-100 bg-[length:200%_100%]"
+                ></span>
+              </td>
+              <td class="border-t border-slate-200 px-3 py-3.5 align-middle">
+                <span
+                  class="block h-5 w-[4.5rem] animate-skeleton-shimmer rounded-full bg-gradient-to-r from-slate-100 via-slate-200 to-slate-100 bg-[length:200%_100%]"
+                ></span>
+              </td>
+            </tr>
+          }
+        } @else {
+          @for (row of vm().rows; track row.searchId + ':' + (row.supplierName ?? '') + ':' + $index) {
+            <tr>
+              <td class="border-t border-slate-200 px-3 py-2.5 align-middle">
+                <div>{{ row.createdAt | date: 'MMM d, y' }}</div>
+                <div class="text-xs text-slate-500">{{ row.createdAt | date: 'HH:mm:ss' }}</div>
+                @if (row.showRunContext) {
+                  <span
+                    [ngClass]="runCompletionClass(row.respondedCount, row.totalSuppliersCount, row.searchStatus.code)"
+                  >
+                    {{
+                      runCompletionLabel(row.respondedCount, row.totalSuppliersCount, row.searchStatus.code)
+                    }}
+                  </span>
+                }
+              </td>
+              <td class="border-t border-slate-200 px-3 py-2.5 align-middle font-semibold">
+                {{ row.fromLocation }} &rarr; {{ row.toLocation }}
+              </td>
+              <td class="border-t border-slate-200 px-3 py-2.5 align-middle">
+                @if (row.supplierName !== null) {
+                  {{ row.supplierName }}
+                } @else {
+                  <span class="text-slate-500">&mdash;</span>
+                }
+              </td>
+              <td class="border-t border-slate-200 px-3 py-2.5 text-right font-semibold tabular-nums align-middle">
+                @if (row.price !== null) {
+                  {{ row.price | currency: 'USD' }}
+                } @else {
+                  <span class="text-slate-500">&mdash;</span>
+                }
+              </td>
+              <td class="border-t border-slate-200 px-3 py-2.5 text-right tabular-nums align-middle">
+                @if (row.responseTimeMs !== null) {
+                  {{ row.responseTimeMs | number }} ms
+                } @else {
+                  <span class="text-slate-500">&mdash;</span>
+                }
+              </td>
+              <td class="border-t border-slate-200 px-3 py-2.5 align-middle">
+                <span [ngClass]="outcomePillClass(row.uiOutcome)">
+                  {{ outcomePillLabel(row.uiOutcome) }}
+                </span>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="6" class="border-t border-slate-200 py-8 text-center text-slate-500">
+                No searches match these filters.
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+
+  @if (vm().result; as page) {
+    <footer class="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 pt-4">
+      <span class="text-sm text-slate-500">
+        @if (page.totalCount > 0) {
+          Showing rows {{ vm().rangeStart }}&ndash;{{ vm().rangeEnd }} of {{ page.totalCount }}
+        } @else {
+          No results
+        }
+      </span>
+      <div class="flex items-center gap-1.5">
+        <label class="mr-2 inline-flex items-center gap-1.5 text-sm text-slate-600" for="history-pageSize">
+          Per page
+          <select
+            id="history-pageSize"
+            class="w-auto rounded-md border border-slate-300 px-2 py-1 text-sm shadow-sm"
+            [value]="vm().pageSize"
+            (change)="action.emit({ type: 'pageSize', pageSize: +$any($event.target).value })"
+            [disabled]="vm().loading"
+          >
+            @for (size of vm().pageSizes; track size) {
+              <option [value]="size" [selected]="size === vm().pageSize">{{ size }}</option>
+            }
+          </select>
+        </label>
+        <button
+          type="button"
+          class="inline-flex items-center justify-center gap-1 rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-sm font-semibold text-slate-900 shadow-sm transition-colors hover:border-slate-400 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+          (click)="action.emit({ type: 'page', page: 1 })"
+          [disabled]="!vm().canGoBack"
+          aria-label="First page"
+        >
+          <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M11 18l-6-6 6-6M18 18l-6-6 6-6" />
+          </svg>
+        </button>
+        <button
+          type="button"
+          class="inline-flex items-center justify-center gap-1 rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-sm font-semibold text-slate-900 shadow-sm transition-colors hover:border-slate-400 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+          (click)="action.emit({ type: 'page', page: page.page - 1 })"
+          [disabled]="!vm().canGoBack"
+          aria-label="Previous page"
+        >
+          <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6" />
+          </svg>
+          <span class="hidden sm:inline">Prev</span>
+        </button>
+        <span class="px-2 text-sm tabular-nums">Page {{ page.page }} of {{ vm().totalPages }}</span>
+        <button
+          type="button"
+          class="inline-flex items-center justify-center gap-1 rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-sm font-semibold text-slate-900 shadow-sm transition-colors hover:border-slate-400 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+          (click)="action.emit({ type: 'page', page: page.page + 1 })"
+          [disabled]="!vm().canGoForward"
+          aria-label="Next page"
+        >
+          <span class="hidden sm:inline">Next</span>
+          <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 18l6-6-6-6" />
+          </svg>
+        </button>
+        <button
+          type="button"
+          class="inline-flex items-center justify-center gap-1 rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-sm font-semibold text-slate-900 shadow-sm transition-colors hover:border-slate-400 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+          (click)="action.emit({ type: 'page', page: vm().totalPages })"
+          [disabled]="!vm().canGoForward"
+          aria-label="Last page"
+        >
+          <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18l6-6-6-6M13 18l6-6-6-6" />
+          </svg>
+        </button>
+      </div>
+    </footer>
+  }
+</section>

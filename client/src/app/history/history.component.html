@@ -1,0 +1,15 @@
+<section class="flex flex-col gap-5">
+  <header class="flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <h1 class="m-0 mb-1 text-2xl font-semibold tracking-tight">Search history</h1>
+      <p class="m-0 text-slate-500">
+        Each row is one supplier response. Response ratio appears once per search run; supplier outcome shows that row's result.
+        Click a column header to sort.
+      </p>
+    </div>
+  </header>
+
+  <app-history-filter [vm]="filterVm()" (action)="onFilterAction($event)" />
+
+  <app-history-table [vm]="tableVm()" (action)="onTableAction($event)" />
+</section>

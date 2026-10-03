@@ -1,0 +1,35 @@
+:host {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  border-radius: 9999px;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgb(255 255 255 / 0.8);
+  text-decoration: none;
+  transition: background-color 150ms, color 150ms;
+}
+
+.nav-link:hover {
+  background-color: rgb(255 255 255 / 0.1);
+  color: #fff;
+}
+
+.nav-link.active {
+  background-color: rgb(37 99 235);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+
+.nav-link.active:hover {
+  background-color: rgb(37 99 235);
+  color: #fff;
+}

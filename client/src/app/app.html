@@ -1,0 +1,53 @@
+@if (loadingService.isLoading()) {
+  <div
+    class="fixed inset-x-0 top-0 z-[100] h-[3px] animate-loading-bar-slide bg-gradient-to-r from-blue-600 via-blue-400 to-blue-600 bg-[length:200%_100%]"
+    aria-hidden="true"
+  ></div>
+}
+
+<header class="sticky top-0 z-50 border-b border-blue-950 bg-blue-900 text-white shadow-md">
+  <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
+    <a
+      routerLink="/search"
+      class="inline-flex items-center gap-2.5 text-lg font-bold tracking-tight text-white no-underline"
+    >
+      <span class="inline-grid h-8 w-8 place-items-center rounded-lg bg-blue-500 text-sm font-bold text-white shadow-sm">P</span>
+      PriceHunt
+    </a>
+    <nav class="flex items-center gap-1">
+      <a routerLink="/search" routerLinkActive="active" class="nav-link">
+        Search
+        @if (searchStore.isRunning()) {
+          <span class="h-2 w-2 animate-pulse rounded-full bg-sky-300" title="Search in progress"></span>
+        }
+      </a>
+      <a routerLink="/history" routerLinkActive="active" class="nav-link">History</a>
+    </nav>
+  </div>
+</header>
+
+<main class="mx-auto max-w-7xl flex-1 px-4 py-8">
+  <router-outlet />
+</main>
+
+<div
+  class="pointer-events-none fixed bottom-4 right-4 z-[110] flex w-[min(22rem,calc(100vw-2rem))] flex-col gap-2.5"
+  aria-live="polite"
+>
+  @for (toast of notificationService.toasts(); track toast.id) {
+    <div
+      class="pointer-events-auto flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3.5 text-slate-900 shadow-lg"
+      role="alert"
+    >
+      <span class="flex-1 text-sm leading-snug">{{ toast.message }}</span>
+      <button
+        type="button"
+        class="h-6 w-6 shrink-0 cursor-pointer rounded-md border-0 bg-transparent text-lg leading-none text-slate-500 transition-colors hover:bg-slate-900/5 hover:text-slate-900"
+        (click)="notificationService.dismiss(toast.id)"
+        aria-label="Dismiss notification"
+      >
+        ×
+      </button>
+    </div>
+  }
+</div>

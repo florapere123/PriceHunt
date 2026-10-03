@@ -1,0 +1,16 @@
+<section class="flex flex-col gap-5">
+  <header class="flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <h1 class="m-0 mb-1 text-2xl font-semibold tracking-tight">Live price search</h1>
+      <p class="m-0 text-slate-500">
+        Quotes stream in as each supplier answers. The search completes when the server stream ends.
+      </p>
+    </div>
+  </header>
+
+  <app-search-filter [vm]="filterVm()" (action)="onFilterAction($event)" />
+
+  @if (tableVm(); as table) {
+    <app-search-table [vm]="table" />
+  }
+</section>
